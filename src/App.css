@@ -5,7 +5,7 @@ body {
   margin: 0;
   padding: 0;
   padding-top: 10px;
-  font-family: "Press Start 2P", cursive;
+  font-family: Sans-serif, cursive;
   text-align: center;
 }
 
@@ -14,7 +14,7 @@ body {
 }
 
 button {
-  font-family: "Press Start 2P", cursive;
+  font-family: Sans-serif, cursive;
   font-style: bolder;
   display: block;
   margin: 0 auto;
@@ -40,7 +40,7 @@ h1 {
 }
 
 textarea {
-  font-family: "Press Start 2P", cursive;
+  font-family: Sans-serif, cursive;
   border: 3px solid #0d4683;
   border-radius: 0.75rem;
   width: 90%;
