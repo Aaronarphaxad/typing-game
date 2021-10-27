@@ -53,7 +53,7 @@ function App() {
     setWordLength(wordLength);
 
     setTimeout(() => {
-      wordsArr.map((word) => {
+      wordsArr.forEach((word) => {
         const endpoint = `https://api.dictionaryapi.dev/api/v2/entries/en_US/${word}`;
         fetch(endpoint)
           .then((data) => {
