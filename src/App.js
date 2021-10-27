@@ -46,29 +46,7 @@ function App() {
   }
 
 
-  function handleCorrectWordCount() {
-    setGettingResult(true);
-    const wordsArr = text.trim().split(" ");
-    const wordLength = wordsArr.filter((word) => word !== "").length;
-    setWordLength(wordLength);
 
-    setTimeout(() => {
-      wordsArr.forEach((word) => {
-        const endpoint = `https://api.dictionaryapi.dev/api/v2/entries/en_US/${word}`;
-        fetch(endpoint)
-          .then((data) => {
-            if (data.status === 200) {
-              setCorrectWords((w) => w + 1);
-              return;
-            }
-          })
-          .catch((error) => {
-            console.log(error.message);
-          });
-      });
-      setGettingResult(false);
-    }, 3000);
-  }
 
   function handleRun(action) {
     if (action === "Start") {
@@ -78,7 +56,7 @@ function App() {
       return;
     }
     window.location.reload();
-  }
+  };
 
   useEffect(() => {
     if (timeRemaining > 0) {
@@ -93,11 +71,38 @@ function App() {
     }
   }, [timeRemaining]);
 
+
   useEffect(() => {
+
+    function handleCorrectWordCount() {
+      setGettingResult(true);
+      const wordsArr = text.trim().split(" ");
+      const wordLength = wordsArr.filter((word) => word !== "").length;
+      setWordLength(wordLength);
+  
+      setTimeout(() => {
+        wordsArr.forEach((word) => {
+          const endpoint = `https://api.dictionaryapi.dev/api/v2/entries/en_US/${word}`;
+          fetch(endpoint)
+            .then((data) => {
+              if (data.status === 200) {
+                setCorrectWords((w) => w + 1);
+                return;
+              }
+            })
+            .catch((error) => {
+              console.log(error.message);
+            });
+        });
+        setGettingResult(false);
+      }, 3000);
+    };
+
     if (submitted) {
       handleCorrectWordCount();
-    }
+    } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeRemaining]);
+
 
   return (
     <div>
