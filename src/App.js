@@ -45,11 +45,11 @@ function App() {
     if(isNaN(newHighScore) ){
       return
     }
-    // if they have, check if world lenght or correct word is greater than zero, for empty input
+    // if they have, check if world length or correct word is greater than zero, for empty input
     if(wordLength||correctWords){
       if(currentHighScore && (currentHighScore > newHighScore)){
         // if there is an high score saved and its less than the newlyy calculated, ignore, do nothing
-        return false
+        return
       }
       //if it is higher, then set it as the new high score
       setHighscore(newHighScore)
@@ -62,7 +62,6 @@ function App() {
     if(isNaN (accuracy)){
       return 0
     }
-    // setAccuracy(a => a = accuracy)
     
     return accuracy.toFixed(2);
   }
@@ -95,7 +94,7 @@ function App() {
   function handleRun(action) {
     if (action === "Start") {
       setIsDisabled(false);
-      setTimeRemaining((t) => (t = 5));
+      setTimeRemaining((t) => (t = 15));
       setIsRunning((r) => !r);
       return;
     }
@@ -131,8 +130,23 @@ function App() {
 
   return (
     <div>
-      <small>High score: {highScore}</small>
       <h1>How fast do you type?</h1>
+      <small className="highscore">High score: {highScore}</small>
+          <h3>Instructions </h3>
+        <center>
+            <div className="card">
+              <small>
+                <ul>
+                  <li>Click the start button</li>
+                  <li>Click on the box to start typing</li>
+                  <li>You have 20 seconds to type as many correct words as you can. From wherever you want.</li>
+                  <li>Wait for your result and beat your highscore :)</li>
+                </ul>
+              </small>
+            </div>
+       </center>
+      
+      <h2>Let the game begin!</h2>
       <textarea
         autoFocus={true}
         disabled={isDisabled}

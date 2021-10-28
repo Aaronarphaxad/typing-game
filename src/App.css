@@ -32,9 +32,11 @@ button:hover {
 
 button:focus {
   background: #0d4683;
+  border: rgb(83, 76, 76);
 }
 
-h1 {
+h1,
+h2 {
   font-size: 20px;
   text-align: center;
 }
@@ -53,4 +55,27 @@ textarea {
 
 .loader {
   padding: 10px 30px;
+}
+
+.card {
+  border-radius: 00.75rem;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  width: 70%;
+  display: flex;
+  justify-self: center;
+  text-align: left;
+  margin-bottom: 20px;
+  padding: 10px;
+  font-weight: bold;
+}
+
+.card:hover {
+  background-color: #f7cc68;
+}
+
+.highscore {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 10px;
+  font-weight: bold;
 }
