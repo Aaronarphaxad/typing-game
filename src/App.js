@@ -2,6 +2,11 @@ import "./App.css";
 import React, { useState, useEffect } from "react";
 import ContentLoader from "react-content-loader";
 
+function retrieveHighScore(){
+  const existingHighScore = localStorage.getItem("highScore") ? localStorage.getItem("highScore"): 0;
+  return existingHighScore
+}
+
 function App() {
   const [text, setText] = useState("");
   const [timeRemaining, setTimeRemaining] = useState(0);
@@ -12,12 +17,12 @@ function App() {
   const [correctWords, setCorrectWords] = useState(0);
   const [wordLength, setWordLength] = useState(0);
   const [action, setAction] = useState("Start");
+  const [ highScore, setHighscore ] = useState(retrieveHighScore())
 
   const style = {
     color: calculateAccuracy(wordLength, correctWords) >= 70 ? "green" : "red"
   };
 
-  const highScore = localStorage.getItem("highScore");
 
   function handleChange(e) {
     const { value } = e.target;
@@ -29,29 +34,68 @@ function App() {
     return wordsArr.filter((word) => word !== "").length;
   }
 
+ 
+  function handleUpdateHighScore () {
+    // get the current high score from local storage
+    const currentHighScore = Number(localStorage.getItem("highScore"))
+    // calculate the current high score as the correct words updates
+    const newHighScore = (calculateAccuracy(wordLength, correctWords) *
+    correctWords)
+    // if the new high score is NaN, means that the player has not started the game, ignore
+    if(isNaN(newHighScore) ){
+      return
+    }
+    // if they have, check if world lenght or correct word is greater than zero, for empty input
+    if(wordLength||correctWords){
+      if(currentHighScore && (currentHighScore > newHighScore)){
+        // if there is an high score saved and its less than the newlyy calculated, ignore, do nothing
+        return false
+      }
+      //if it is higher, then set it as the new high score
+      setHighscore(newHighScore)
+      localStorage.setItem("highScore", JSON.stringify(newHighScore));
+    }
+  }
+
   function calculateAccuracy(length, correctWords) {
     const accuracy = (correctWords / length) * 100;
-
-    const totalScore = accuracy * wordLength;
-    if (localStorage.getItem("highScore")) {
-      const highScore = Number(localStorage.getItem("highScore"));
-      if (highScore < totalScore) {
-        localStorage.setItem("highScore", JSON.stringify(totalScore));
-      }
+    if(isNaN (accuracy)){
+      return 0
     }
-    else{
-      localStorage.setItem("highScore", JSON.stringify(totalScore));
-    }
+    // setAccuracy(a => a = accuracy)
+    
     return accuracy.toFixed(2);
   }
 
+  function handleCorrectWordCount() {
+    setGettingResult(true);
+    const wordsArr = text.trim().split(" ");
+    const wordLength = wordsArr.filter((word) => word !== "").length;
+    setWordLength(wordLength);
 
-
+    setTimeout(() => {
+      wordsArr.forEach((word) => {
+        const endpoint = `https://api.dictionaryapi.dev/api/v2/entries/en_US/${word}`;
+        fetch(endpoint)
+          .then((data) => {
+            if (data.status === 200) {
+              setCorrectWords((w) => w + 1);
+              return;
+            }
+          })
+          .catch((error) => {
+            console.log(error.message);
+          });
+      });
+      
+      setGettingResult(false);
+    }, 3000);
+  };
 
   function handleRun(action) {
     if (action === "Start") {
       setIsDisabled(false);
-      setTimeRemaining((t) => (t = 15));
+      setTimeRemaining((t) => (t = 5));
       setIsRunning((r) => !r);
       return;
     }
@@ -72,31 +116,12 @@ function App() {
   }, [timeRemaining]);
 
 
-  useEffect(() => {
+  useEffect(()=>{
+   handleUpdateHighScore()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[correctWords])
 
-    function handleCorrectWordCount() {
-      setGettingResult(true);
-      const wordsArr = text.trim().split(" ");
-      const wordLength = wordsArr.filter((word) => word !== "").length;
-      setWordLength(wordLength);
-  
-      setTimeout(() => {
-        wordsArr.forEach((word) => {
-          const endpoint = `https://api.dictionaryapi.dev/api/v2/entries/en_US/${word}`;
-          fetch(endpoint)
-            .then((data) => {
-              if (data.status === 200) {
-                setCorrectWords((w) => w + 1);
-                return;
-              }
-            })
-            .catch((error) => {
-              console.log(error.message);
-            });
-        });
-        setGettingResult(false);
-      }, 3000);
-    };
+  useEffect(() => {
 
     if (submitted) {
       handleCorrectWordCount();
@@ -106,7 +131,7 @@ function App() {
 
   return (
     <div>
-      <small>High score: {highScore ? highScore : 0}</small>
+      <small>High score: {highScore}</small>
       <h1>How fast do you type?</h1>
       <textarea
         autoFocus={true}
@@ -135,7 +160,7 @@ function App() {
           <h2>
             Overall score:{" "}
             {calculateAccuracy(wordLength, correctWords) *
-              calculateWordCount(text)}
+              correctWords}
           </h2>
         </div>
       )}
