@@ -130,7 +130,8 @@ function App() {
 
   return (
     <div>
-      <h1>How fast do you type?</h1>
+      <h1>How fast can you type?</h1>
+      <hr />
       <small className="highscore">High score: {highScore}</small>
           <h3>Instructions </h3>
         <center>
