@@ -94,7 +94,7 @@ function App() {
   function handleRun(action) {
     if (action === "Start") {
       setIsDisabled(false);
-      setTimeRemaining((t) => (t = 15));
+      setTimeRemaining((t) => (t = 20));
       setIsRunning((r) => !r);
       return;
     }
